@@ -1,11 +1,17 @@
-# library & dataset
+# Visualizing correlation using Seaborn package
+# Created by Maciej Wiatrak 28th December 2017
+
+#importing packages
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import pandas
 
-myFilename = './data/wk1/QM Data Analysis - xx.csv'
+#importing and reading the .csv file
+myFilename = './data/Charitability&Healthcare.csv'
+#making sure the .csv is in the right format
 data1 = pandas.DataFrame.from_csv(myFilename)
 data1.head()
 
+# using seaborn's functions to visualize the correlation
 sns.lmplot('Charitable score','Healthcare quality', data=data1, fit_reg=True)
