@@ -1,0 +1,56 @@
+# Creating a radar chart visualizing the strength (using non negative values)  of Spearman rank correlation coefficient between charitability & other ratios
+# Created by Maciej Wiatrak 12th January 2017
+# Created with help from https://python-graph-gallery.com/
+
+# importing libraries/packages
+import matplotlib.pyplot as plt
+import pandas as pd
+from math import pi
+
+# Loading the dataset (non negative values) of correlation coeff. calculated using python in 'CorrelationCoefficients.ipynb' (https://qm2dataanalysisvisualization-macwiatrak.notebooks.azure.com/nb//notebooks/CorrelationCoefficients.ipynb)
+myFilename = './data/ONLY Positive values of correlation coefficients results.csv'
+data1 = pd.DataFrame.from_csv(myFilename)
+data1.head()
+
+# Set data, specify with what data we will be working with and how we will group it using 'Group': ['A'],
+df = pd.DataFrame({
+'Group': ['A'],
+'policy lib. of states': [data1['Policy Liberalism of States'].loc['Spearman']],
+'healthcare qual.': [data1['Healthcare quality'].loc['Spearman']],
+'education ratio': [data1['Education ratio'].loc['Spearman']],
+'gini coefficient': [data1['Gini coefficient'].loc['Spearman']],
+'state integrity': [data1['State integrity'].loc['Spearman']],
+'word frequency analysis': [data1['Word frequency analysis'].loc['Spearman']]
+})
+ 
+ # counting the number of variables to visualize it in a radar chart
+categories=list(df)[1:]
+N = len(categories)
+ 
+# We are going to plot the first line of the data frame (that's why we have put it like that).
+# But we need to repeat the first value to close the circular graph:
+values=df.loc[0].drop('Group').values.flatten().tolist()
+values += values[:1]
+values
+ 
+# What will be the angle of each axis in the plot? (we divide the plot / number of variable)
+angles = [n / float(N) * 2 * pi for n in range(N)]
+angles += angles[:1]
+ 
+ # Initialise the spider plot
+ax = plt.subplot(111, polar=True)
+ 
+# Draw one axe per variable + add labels labels yet
+plt.xticks(angles[:-1], categories, color='grey', size=10)
+ 
+# Draw ylabels
+ax.set_rlabel_position(0)
+plt.yticks([0.1,0.2,0.3], ["0.1","0.2","0.3"], color="grey", size=7)
+plt.ylim(0,0.45)
+plt.title('Strength of Spearman rank correlation between charitability and various indicators')
+ 
+# Plot data
+ax.plot(angles, values, linewidth=1, linestyle='solid')
+ 
+# Fill area
+ax.fill(angles, values, 'r', alpha=0.2)
